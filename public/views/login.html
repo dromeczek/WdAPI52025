@@ -1,22 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="public/styles/main.css">
-    <link rel="stylesheet" type="text/css" href="public/styles/login.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZASIANE – Logowanie</title>
+  <link rel="stylesheet" href="../styles/login.css">
 </head>
 <body>
-    
+  <!-- logo w lewym górnym rogu -->
+  <img src="../images/logo.png" alt="ZASIANE" class="corner-logo">
 
-        <form>
-            <h1 id="title">Login</h1>
-            <input type="email" placeholder="Podaj email">
-            <input type="password" placeholder="Podaj hasło">
-            <button type="submit">Login</button>
-        </form>
-    
+  <div class="background">
+    <div class="frame">
+      <div class="form">
+        <label for="login">Login:</label>
+        <input type="text" id="login" name="login" placeholder="Wpisz login">
+
+        <label for="haslo">Hasło:</label>
+        <input type="password" id="haslo" name="haslo" placeholder="Wpisz hasło">
+
+        <button class="login-btn">login</button>
+        <button class="register-btn">załóż konto</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
- 
