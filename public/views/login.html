@@ -4,23 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ZASIANE – Logowanie</title>
- <link rel="stylesheet" href="/public/styles/login.css">
+  <link rel="stylesheet" href="/public/styles/login.css">
 </head>
 <body>
   <!-- logo w lewym górnym rogu -->
- <img src="../images/logo.png" alt="ZASIANE" class="corner-logo">
+  <img src="../images/logo.png" alt="ZASIANE" class="corner-logo">
+
   <div class="background">
     <div class="frame">
-      <div class="form">
-        <label for="login">Login:</label>
-        <input type="text" id="login" name="login" placeholder="Wpisz login">
+      <!-- Formularz logowania -->
+      <form class="form" action="/login" method="POST">
+  <label for="login">Login:</label>
+  <input type="text" id="login" name="login" required>
 
-        <label for="haslo">Hasło:</label>
-        <input type="password" id="haslo" name="haslo" placeholder="Wpisz hasło">
+  <label for="haslo">Hasło:</label>
+  <input type="password" id="haslo" name="haslo" required>
 
-        <button class="login-btn">login</button>
-        <button class="register-btn">załóż konto</button>
-      </div>
+  <button type="submit" class="login-btn">zaloguj</button>
+  <button type="button" class="register-btn" onclick="window.location.href='/register'">
+    załóż konto
+  </button>
+</form>
+
     </div>
   </div>
 </body>

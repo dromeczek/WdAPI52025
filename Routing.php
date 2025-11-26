@@ -6,6 +6,7 @@ final class Router
     private array $routes = []; // każdy wpis: ['method'=>..., 'regex'=>..., 'handler'=>callable]
 
     private function __construct() {}
+
     public static function getInstance(): self {
         return self::$instance ??= new self();
     }
