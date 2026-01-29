@@ -3,8 +3,8 @@
 
 require_once __DIR__ . '/../../repository/UserRepository.php';
 
-class SecurityController {
-
+class SecurityController
+{
     private UserRepository $userRepository;
 
     public function __construct()
@@ -12,15 +12,18 @@ class SecurityController {
         $this->userRepository = new UserRepository();
     }
 
-    public function showLogin(): void {
+    public function showLogin(): void
+    {
         require __DIR__ . '/../../public/views/login.html';
     }
 
-    public function showRegister(): void {
+    public function showRegister(): void
+    {
         require __DIR__ . '/../../public/views/register.html';
     }
 
-    public function handleRegister(): void {
+    public function handleRegister(): void
+    {
         $login = $_POST['login'] ?? null;
         $pass  = $_POST['haslo'] ?? null;
         $email = $_POST['email'] ?? null;
@@ -31,28 +34,38 @@ class SecurityController {
             return;
         }
 
-        // sprawdzenie czy login już istnieje
+        // Prosta walidacja email (minimalna)
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            http_response_code(400);
+            echo "Niepoprawny adres e-mail.";
+            return;
+        }
+
+        // czy login już istnieje
         if ($this->userRepository->findByLogin($login)) {
             http_response_code(400);
             echo "Użytkownik o takim loginie już istnieje.";
             return;
         }
 
-        // zapis do bazy z hashowaniem (robi to createUser)
-        $ok = $this->userRepository->createUser($login, $pass, $email);
+        $hash = password_hash($pass, PASSWORD_DEFAULT);
 
-        if (!$ok) {
+        try {
+            // UWAGA: kolejność = login, email, hash
+            $this->userRepository->createUser($login, $email, $hash);
+        } catch (Exception $e) {
             http_response_code(500);
-            echo "Błąd podczas zapisu użytkownika.";
+            // tymczasowo pokazujemy prawdziwy błąd, żeby nie zgadywać
+            echo $e->getMessage();
             return;
         }
 
-        // po udanej rejestracji redirect na login
         header('Location: /login');
         exit;
     }
 
-    public function handleLogin(): void {
+    public function handleLogin(): void
+    {
         $login = $_POST['login'] ?? null;
         $pass  = $_POST['haslo'] ?? null;
 
@@ -62,35 +75,34 @@ class SecurityController {
             return;
         }
 
-        // pobierz użytkownika po loginie
         $user = $this->userRepository->findByLogin($login);
 
-        // jeśli nie ma użytkownika ALBO hasło nie pasuje → błąd
-        if (!$user || !password_verify($pass, $user['password'])) {
+        // UWAGA: w bazie jest password_hash
+        if (!$user || !password_verify($pass, $user['password_hash'])) {
             http_response_code(401);
             echo "Nieprawidłowy login lub hasło.";
             return;
         }
 
-        // logujemy użytkownika – zapis do sesji
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
+        session_regenerate_id(true);
 
-        // uwaga: w bazie masz kolumnę ID (wielkie litery)
-        $_SESSION['user_id'] = $user['ID'] ?? null;
-        $_SESSION['login']   = $user['login'] ?? null;
+        // UWAGA: w bazie jest id (małe)
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['login']   = $user['login'];
 
         header('Location: /dashboard');
         exit;
     }
 
-    public function logout(): void {
+    public function logout(): void
+    {
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
 
-        // czyścimy sesję
         $_SESSION = [];
         session_destroy();
 
