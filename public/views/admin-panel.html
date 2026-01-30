@@ -2,33 +2,136 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Panel Admina</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZASIANE – Panel Admina</title>
+    <link rel="stylesheet" href="/public/styles/dashboard.css">
     <style>
-        body { font-family: Arial; padding: 50px; background: #f4f4f4; }
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { padding: 15px; border: 1px solid #ddd; text-align: left; }
-        th { background: #27ae60; color: white; }
+        .admin-container {
+            padding: 50px;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+        th {
+            background: #2e7d32;
+            color: white;
+            text-transform: uppercase;
+            font-size: 0.8em;
+        }
+        tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        /* Styl dla zbanowanego wiersza */
+        .banned-row {
+            opacity: 0.6;
+            background: rgba(211, 47, 47, 0.1);
+        }
+        .habit-list {
+            font-style: italic;
+            color: #b0b0b0;
+            max-width: 300px;
+        }
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .ban-btn {
+            background: #d32f2f;
+            color: white;
+        }
+        .ban-btn:hover {
+            background: #b71c1c;
+        }
+        .unban-btn {
+            background: #4caf50;
+            color: white;
+        }
+        .unban-btn:hover {
+            background: #388e3c;
+        }
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.7em;
+        }
+        .status-active { background: #4caf50; }
+        .status-banned { background: #d32f2f; }
     </style>
 </head>
 <body>
-    <h1>Statystyki użytkowników (Widok SQL)</h1>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Login</th>
-            <th>Email</th>
-            <th>Liczba Roślin</th>
-        </tr>
-        <?php foreach ($stats as $row): ?>
-        <tr>
-            <td><?= $row['id'] ?></td>
-            <td><?= htmlspecialchars($row['login']) ?></td>
-            <td><?= htmlspecialchars($row['email']) ?></td>
-            <td><?= $row['total_plants'] ?></td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
-    <br>
-    <a href="/dashboard">Wróć do ogrodu</a>
+    <img src="https://raw.githubusercontent.com/dromeczek/WdAPI52025/main/public/images/logo.png" 
+         alt="ZASIANE" class="corner-logo" style="width: 80px; margin: 20px;">
+
+    <div class="admin-container">
+        <h1>Panel Zarządzania Użytkownikami</h1>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Status</th>
+                    <th>Użytkownik</th>
+                    <th>Nawyki (Habity)</th>
+                    <th>Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (isset($users) && is_array($users)): ?>
+                    <?php foreach ($users as $user): ?>
+                    <tr class="<?= !$user['is_active'] ? 'banned-row' : '' ?>">
+                        <td>#<?= $user['id'] ?></td>
+                        <td>
+                            <?php if ($user['is_active']): ?>
+                                <span class="status-badge status-active">Aktywny</span>
+                            <?php else: ?>
+                                <span class="status-badge status-banned">Zbanowany</span>
+                            <?php endif; ?>
+                        </td>
+                        <td><strong><?= htmlspecialchars($user['login']) ?></strong><br><small><?= htmlspecialchars($user['email']) ?></small></td>
+                        <td class="habit-list">
+                            <?= $user['habit_names'] ? htmlspecialchars($user['habit_names']) : 'Brak nawyków' ?>
+                        </td>
+                        <td>
+                            <?php if ($user['is_active']): ?>
+                                <form action="/ban/<?= $user['id'] ?>" method="POST" onsubmit="return confirm('Zablokować użytkownika <?= $user['login'] ?>?')">
+                                    <button type="submit" class="btn ban-btn">Zbanuj</button>
+                                </form>
+                            <?php else: ?>
+                                <form action="/unban/<?= $user['id'] ?>" method="POST">
+                                    <button type="submit" class="btn unban-btn">Odblokuj</button>
+                                </form>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="5" style="text-align: center;">Nie znaleziono żadnych użytkowników.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <p style="margin-top: 20px;">
+            <a href="/dashboard" style="color: #81c784; text-decoration: none;">← Powrót do Dashboardu</a>
+        </p>
+    </div>
 </body>
 </html>

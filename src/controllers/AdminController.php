@@ -1,12 +1,16 @@
 <?php
 require_once 'AppController.php';
 require_once __DIR__ .'/../../repository/HabitRepository.php';
+require_once __DIR__ .'/../../repository/UserRepository.php';
 
 class AdminController extends AppController {
     private $habitRepository;
+    private $userRepository;
 
     public function __construct() {
+        // Usunięto parent::__construct() - to był powód błędu
         $this->habitRepository = new HabitRepository();
+        $this->userRepository = new UserRepository();
     }
 
     public function adminPanel() {
@@ -14,17 +18,24 @@ class AdminController extends AppController {
             session_start();
         }
 
-        // Pobieramy rolę z sesji lub ustawiamy null jeśli nie istnieje
         $role = $_SESSION['role'] ?? null;
-
-        // Sprawdzanie uprawnień - tylko ADMIN ma wstęp
         if (!$role || $role !== 'ADMIN') {
             header('Location: /dashboard');
             exit;
         }
 
-        // Pobieramy dane z WIDOKU SQL (v_user_plant_stats)
-        $stats = $this->habitRepository->getAllUsersStats();
-        $this->render('admin-panel', ['stats' => $stats]);
+        $users = $this->userRepository->getUsersWithHabits();
+        $this->render('admin-panel', ['users' => $users]);
     }
+
+    public function ban($params) {
+        $this->userRepository->banUser($params['id']);
+        header("Location: /admin");
+        exit();
+    }
+    public function unban($params) {
+    $this->userRepository->unbanUser($params['id']);
+    header("Location: /admin");
+    exit();
+}
 }

@@ -23,8 +23,8 @@ $router->add('POST', '/register', fn() => $security->handleRegister());
 // Trasy z parametrami
 $router->add('GET', '/water/(?P<id>\d+)', fn($params) => $habitController->water($params));
 $router->add('GET', '/deleteHabit/(?P<id>\d+)', fn($params) => $habitController->delete($params));
-
+$router->add('POST', '/ban/(?P<id>\d+)', fn($params) => $adminController->ban($params));
 // Panel Admina
 $router->add('GET', '/admin', fn() => $adminController->adminPanel());
-
+$router->add('POST', '/unban/(?P<id>\d+)', fn($params) => $adminController->unban($params));
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
