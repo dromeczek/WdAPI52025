@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Admina</title>
+    <style>
+        body { font-family: Arial; padding: 50px; background: #f4f4f4; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 15px; border: 1px solid #ddd; text-align: left; }
+        th { background: #27ae60; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Statystyki użytkowników (Widok SQL)</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Login</th>
+            <th>Email</th>
+            <th>Liczba Roślin</th>
+        </tr>
+        <?php foreach ($stats as $row): ?>
+        <tr>
+            <td><?= $row['id'] ?></td>
+            <td><?= htmlspecialchars($row['login']) ?></td>
+            <td><?= htmlspecialchars($row['email']) ?></td>
+            <td><?= $row['total_plants'] ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+    <br>
+    <a href="/dashboard">Wróć do ogrodu</a>
+</body>
+</html>

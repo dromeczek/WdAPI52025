@@ -102,13 +102,20 @@
 </head>
 <body>
 
-  <nav style="display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; background:#fff; border-bottom: 1px solid #eee;">
-    <strong style="color: #27ae60; font-size: 1.5rem;">🌱 ZASIANE</strong>
+<nav style="display:flex; justify-content:space-between; padding:1rem; background:#fff; border-bottom: 1px solid #ddd;">
+    <strong style="color: #27ae60;">🌱 ZASIANE</strong>
     <div>
         <span>Witaj, <strong><?= htmlspecialchars($_SESSION['login'] ?? 'Użytkowniku') ?></strong>!</span>
-        <a href="/logout" style="margin-left: 20px; color: #e74c3c; text-decoration: none; font-weight: bold;">Wyloguj</a>
+
+        <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'ADMIN'): ?>
+            <a href="/admin" style="margin-left: 20px; padding: 5px 10px; background: #f1c40f; color: #000; text-decoration: none; border-radius: 5px; font-weight: bold; border: 1px solid #d4ac0d;">
+                🛡️ PANEL ADMINA
+            </a>
+        <?php endif; ?>
+
+        <a href="/logout" style="margin-left: 20px; color: #e74c3c; text-decoration: none;">Wyloguj</a>
     </div>
-  </nav>
+</nav>
 
   <div class="garden-container">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
