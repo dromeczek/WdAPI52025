@@ -38,6 +38,7 @@ $router->add('GET', '/users/(?P<id>\d+)', function(array $p) {
     echo "Użytkownik ID = " . (int)$p['id'];
 });
 //Habitt
+$router->add('GET', '/deleteHabit/(?P<id>\d+)', fn($params) => $habitController->delete($params));
 $router->add('GET',  '/addHabit', fn() => $habitController->addHabit());
 $router->add('POST', '/addHabit', fn() => $habitController->addHabit());
 $router->add('GET', '/water/(?P<id>\d+)', fn($params) => $habitController->water($params));

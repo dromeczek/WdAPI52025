@@ -25,7 +25,34 @@ class HabitRepository extends Repository
             ':user_id' => $userId
         ]);
     }
+public function deleteHabit(int $habitId, int $userId): void
+{
+    $conn = $this->database->connect();
+    
+    try {
+        // ROZPOCZĘCIE TRANSAKCJI
+        $conn->beginTransaction();
 
+        // 1. Usuwamy logi (historię podlewania) danej rośliny
+        $stmt = $conn->prepare("DELETE FROM habit_logs WHERE habit_id = :id");
+        $stmt->execute([':id' => $habitId]);
+
+        // 2. Usuwamy samą roślinę, sprawdzając czy należy do zalogowanego użytkownika (bezpieczeństwo!)
+        $stmt = $conn->prepare("DELETE FROM habits WHERE id = :id AND user_id = :user_id");
+        $stmt->execute([
+            ':id' => $habitId,
+            ':user_id' => $userId
+        ]);
+
+        // ZATWIERDZENIE ZMIAN
+        $conn->commit();
+        
+    } catch (Exception $e) {
+        // W razie jakiegokolwiek błędu - cofamy wszystkie zmiany
+        $conn->rollBack();
+        throw $e;
+    }
+}
     public function refreshHabitsHealth(int $userId): void
 {
     $conn = $this->database->connect();
