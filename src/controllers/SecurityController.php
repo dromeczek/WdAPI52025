@@ -97,16 +97,17 @@ class SecurityController
         exit;
     }
 
-    public function logout(): void
-    {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-
-        $_SESSION = [];
-        session_destroy();
-
-        header('Location: /login');
-        exit;
+public function logout(): void
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
     }
+
+    $_SESSION = [];
+    session_destroy();
+
+    header('Location: /login');
+    exit;
+}
+
 }

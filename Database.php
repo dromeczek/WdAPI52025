@@ -1,12 +1,15 @@
 <?php
 
 require_once "config.php";
-// TODO SINGLETON 
+//todo singleton
 class Database {
     private $username;
     private $password;
     private $host;
     private $database;
+    
+    // Tu będziemy trzymać aktywne połączenie PDO
+    private static $connection;
 
     public function __construct()
     {
@@ -18,17 +21,21 @@ class Database {
 
     public function connect()
     {
+        // Jeśli połączenie już istnieje, po prostu je zwróć
+        if (self::$connection !== null) {
+            return self::$connection;
+        }
+
         try {
-            $conn = new PDO(
+            self::$connection = new PDO(
                 "pgsql:host=$this->host;port=5432;dbname=$this->database",
                 $this->username,
                 $this->password,
                 ["sslmode"  => "prefer"]
             );
 
-            // set the PDO error mode to exception
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $conn;
+            self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return self::$connection;
         }
         catch(PDOException $e) {
             die("Connection failed: " . $e->getMessage());
