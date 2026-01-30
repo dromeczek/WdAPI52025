@@ -10,11 +10,6 @@ class HabitRepository extends Repository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function addHabit(string $name, int $userId): void {
-        $conn = $this->database->connect();
-        $stmt = $conn->prepare("INSERT INTO habits (name, user_id, current_health) VALUES (:name, :user_id, 50)");
-        $stmt->execute([':name' => $name, ':user_id' => $userId]);
-    }
 
     // Metoda korzystająca z WIDOKU (View) w SQL
     public function getAllUsersStats(): array {
@@ -73,4 +68,18 @@ class HabitRepository extends Repository {
             }
         }
     }
+    public function addHabit(string $name, int $targetDays, string $reminderTime, int $userId): void
+{
+    $stmt = $this->database->connect()->prepare('
+        INSERT INTO habits (name, target_days_per_week, reminder_time, user_id, current_health)
+        VALUES (?, ?, ?, ?, 100)
+    ');
+
+    $stmt->execute([
+        $name,
+        $targetDays,
+        $reminderTime,
+        $userId
+    ]);
+}
 }

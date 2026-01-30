@@ -1,4 +1,5 @@
 <?php
+
 require_once 'AppController.php';
 require_once __DIR__ .'/../../repository/HabitRepository.php';
 
@@ -6,6 +7,7 @@ class HabitController extends AppController {
     private $habitRepository;
 
     public function __construct() {
+        // Jeśli AppController nie ma konstruktora, nie wywołujemy parent::__construct()
         $this->habitRepository = new HabitRepository();
     }
 
@@ -19,25 +21,46 @@ class HabitController extends AppController {
     }
 
     public function delete(array $params) {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+
         $id = (int)$params['id'];
-        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        $userId = $_SESSION['user_id'] ?? null;
+
+        if ($userId) {
+            $this->habitRepository->deleteHabit($id, $userId);
+        }
         
-        $this->habitRepository->deleteHabit($id, $_SESSION['user_id']);
         header('Location: /dashboard');
+        exit;
     }
 
-    public function addHabit() {
-        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
-        if (!isset($_SESSION['user_id'])) { header('Location: /login'); exit; }
-
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            return $this->render('add-habit');
+    public function addHabit()
+    {
+        // Sprawdzamy sesję na początku metody
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
         }
 
-        $name = $_POST['name'] ?? null;
-        if ($name) {
-            $this->habitRepository->addHabit($name, $_SESSION['user_id']);
-            header('Location: /dashboard');
+        // Zastąpienie isPost() standardowym sprawdzeniem PHP
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = $_POST['name'] ?? null;
+            $targetDays = isset($_POST['target_days_per_week']) ? (int)$_POST['target_days_per_week'] : 7;
+            $reminderTime = $_POST['reminder_time'] ?? '08:00';
+            $userId = $_SESSION['user_id'] ?? null;
+
+            if ($name && $userId) {
+                $this->habitRepository->addHabit($name, $targetDays, $reminderTime, $userId);
+                header("Location: /dashboard");
+                exit;
+            } else {
+                // Jeśli brakuje danych, renderujemy ponownie z komunikatem
+                return $this->render('add-habit', ['messages' => ['Błąd: Nie udało się dodać nawyku.']]);
+            }
         }
+
+        // Domyślnie pokazujemy formularz (dla żądania GET)
+        return $this->render('add-habit');
     }
 }
