@@ -16,14 +16,14 @@ class DashboardController extends AppController
             exit;
         }
 
-        // 1. Tworzymy instancję repozytorium
-        $habitRepository = new HabitRepository();
-        
-        // 2. Pobieramy nawyki zalogowanego użytkownika
-        $habits = $habitRepository->getHabits($_SESSION['user_id']);
+  $habitRepository = new HabitRepository();
+    
+    // NAJPIERW: przelicz więdnięcie
+    $habitRepository->refreshHabitsHealth($_SESSION['user_id']);
+    
+    // POTEM: pobierz świeże dane
+    $habits = $habitRepository->getHabits($_SESSION['user_id']);
 
-        // 3. Renderujemy widok, przekazując tablicę $habits
-        // Metoda render sprawi, że w pliku .html zmienna $habits będzie dostępna
-        $this->render('dashboard', ['habits' => $habits]);
+    $this->render('dashboard', ['habits' => $habits]);
     }
 }
