@@ -41,7 +41,24 @@ public function __construct()
         // 4. Przekieruj na dashboard po sukcesie
         header('Location: /dashboard');
     }
+public function water(array $params)
+{
+    $id = (int)$params['id'];
+    
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
 
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: /login');
+        exit;
+    }
+
+    
+    $this->habitRepository->waterHabit($id);
+    
+    header('Location: /dashboard');
+}
     private function isGet(): bool
     {
         return $_SERVER['REQUEST_METHOD'] === 'GET';
