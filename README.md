@@ -8,11 +8,12 @@ natomiast brak aktywności prowadzi do ich obumierania.
 
 Dodatkowo aplikacja posiada **system kar (HP)** zależny od częstotliwości wykonywania nawyku:
 
-| Częstotliwość | Typ rośliny | Kara za 1 dzień zwłoki | Dni do uschnięcia |
-|---|---|---:|---:|
-| 7/7 (Codziennie) | Drzewo (wymagające) | 15 HP | ~7 dni |
-| 3–5/7 (Często) | Krzew (średni) | 10 HP | 10 dni |
-| 1/7 (Rzadko) | Kaktus (odporny) | 5 HP | 20 dni |
+| Częstotliwość | Kara za 1 dzień zwłoki | Dni do uschnięcia |
+|---|---:|---:|
+| 7/7 (Codziennie) | 15 HP | ~7 dni |
+| 3–5/7 (Często) | 10 HP | 10 dni |
+| 1/7 (Rzadko) | 5 HP | 20 dni |
+
 
 Aplikacja posiada system logowania, role użytkowników oraz panel administracyjny umożliwiający zarządzanie kontami.
 
