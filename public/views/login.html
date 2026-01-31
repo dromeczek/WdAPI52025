@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ZASIANE – Logowanie</title>
   <link rel="stylesheet" href="/public/styles/login.css">
+  <script src="/public/scripts/auth.js" defer></script>
+
 </head>
 <body>
   <!-- logo w lewym górnym rogu -->
@@ -19,6 +21,9 @@
   </div>
   <?php unset($_SESSION['flash_error']); ?>
 <?php endif; ?>
+<div id="login-error"
+     style="display:none;background:#ffe6e6;color:#a10000;padding:10px 12px;border-radius:8px;margin-bottom:15px;text-align:center;font-weight:600;">
+</div>
       <!-- Formularz logowania -->
       <form class="form" action="/login" method="POST">
   <label for="login">Login:</label>
