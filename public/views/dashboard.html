@@ -14,8 +14,11 @@
     </a>
     
     <div class="user-icons">
-        <a href="/logout" title="Wyloguj">🚪</a>
-    </div>
+    <?php if (isset($roleId) && (int)$roleId === 2): ?>
+        <a href="/admin" title="Panel Administratora" style="font-size: 2.5rem; text-decoration: none;">⚙️</a>
+    <?php endif; ?>
+    <a href="/logout" title="Wyloguj">🚪</a>
+</div>
 </nav>
 
 <div class="header-section">

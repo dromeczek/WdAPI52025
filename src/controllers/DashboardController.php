@@ -1,6 +1,8 @@
 <?php
-require_once 'AppController.php'; // Jeśli jest w tym samym folderze
-require_once __DIR__ . '/../../repository/HabitRepository.php'; // Ścieżka do repozytorium
+
+require_once 'AppController.php';
+require_once __DIR__ .'/../../repository/HabitRepository.php';
+
 class DashboardController extends AppController {
     private $habitRepository;
 
@@ -14,19 +16,20 @@ class DashboardController extends AppController {
         }
 
         $userId = $_SESSION['user_id'] ?? null;
+        $roleId = $_SESSION['role_id'] ?? null; // Pobieramy role_id z sesji
+
         if (!$userId) {
             header('Location: /login');
             exit;
         }
 
-        // 1. Aktualizacja zdrowia (logika więdnięcia)
         $this->habitRepository->updateHealthStatus($userId);
-
-        // 2. Pobranie nawyków wraz z nowymi statystykami (podlania)
         $habits = $this->habitRepository->getHabits($userId);
         
+        // Przekazujemy roleId do widoku
         $this->render('dashboard', [
-            'habits' => $habits
+            'habits' => $habits,
+            'roleId' => $roleId 
         ]);
     }
 }

@@ -15,61 +15,41 @@ class HabitController extends AppController {
             session_start();
         }
 
-        // Zmieniono z $this->isPost() na standardowe sprawdzenie metody żądania
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = $_POST['name'];
-            $targetDays = (int)$_POST['target_days'];
+            $name = $_POST['name'] ?? null;
+            $targetDays = isset($_POST['target_days']) ? (int)$_POST['target_days'] : 7;
             $userId = $_SESSION['user_id'] ?? null;
 
-            if (!$userId) {
-                return $this->render('login', ['messages' => ['Sesja wygasła, zaloguj się ponownie.']]);
+            if ($name && $userId) {
+                $this->habitRepository->addHabit($name, $targetDays, $userId);
+                header('Location: /dashboard');
+                exit;
             }
-
-            $this->habitRepository->addHabit($name, $targetDays, $userId);
-            header('Location: /dashboard');
-            exit;
         }
 
         return $this->render('add-habit');
     }
 
     public function water(array $params) {
+        $habitId = (int)$params['id'];
+        if ($this->habitRepository->getWateringCountToday($habitId) > 0) {
+            http_response_code(400);
+            echo "Już podlane!";
+            return;
+        }
+        $this->habitRepository->waterHabit($habitId);
+        http_response_code(200);
+    }
+
+    public function waterAll() {
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
-        
-        $habitId = (int)$params['id'];
-        $todayCount = $this->habitRepository->getWateringCountToday($habitId);
-
-        if ($todayCount > 0) {
-            http_response_code(400);
-            echo "Ta roślina była już dzisiaj podlewana! 🌱";
-            return;
-        }
-
-        try {
-            $this->habitRepository->waterHabit($habitId);
-            http_response_code(200);
-            echo "Sukces! Roślina odżyła.";
-        } catch (Exception $e) {
-            http_response_code(500);
-            echo "Błąd bazy danych.";
+        $userId = $_SESSION['user_id'] ?? null;
+        if ($userId) {
+            $this->habitRepository->waterAll($userId);
+            header('Location: /dashboard');
+            exit;
         }
     }
-
-    public function delete(array $params) {
-        $habitId = (int)$params['id'];
-        $this->habitRepository->deleteHabit($habitId);
-        header('Location: /dashboard');
-    }
-    public function waterAll() {
-    if (session_status() !== PHP_SESSION_ACTIVE) { session_start(); }
-    $userId = $_SESSION['user_id'] ?? null;
-
-    if ($userId) {
-        $this->habitRepository->waterAll($userId);
-        header('Location: /dashboard');
-        exit;
-    }
-}
 }
