@@ -66,7 +66,9 @@ Uprawnienia są egzekwowane po stronie backendu.
 - Blokada dostępu dla zbanowanych użytkowników
 - Autoryzacja dostępu do panelu administratora
 - Walidacja danych wejściowych
+Logowanie użytkownika (Fetch API / AJAX)
 
+Proces logowania użytkownika został zrealizowany asynchronicznie z wykorzystaniem Fetch API (AJAX). Dane logowania są przesyłane z warstwy frontendowej do backendu w PHP bez przeładowania strony, a serwer zwraca odpowiedź w formacie JSON. Na podstawie otrzymanej odpowiedzi aplikacja wyświetla komunikat o błędzie lub przekierowuje użytkownika do panelu dashboard po poprawnym uwierzytelnieniu.
 ---
 
 ## Baza danych
