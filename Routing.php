@@ -9,6 +9,8 @@ require_once __DIR__ . '/src/controllers/AdminController.php';
 class Routing
 {
     private static array $routes = [
+        ['GET', '#^$#', 'SecurityController', 'root'],
+
         // AUTH
         ['GET',  '#^login$#',                 'SecurityController',  'loginForm'],
         ['POST', '#^login$#',                 'SecurityController',  'login'],

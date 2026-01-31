@@ -36,10 +36,11 @@ class SecurityController extends AppController
         }
 
         // ✅ BLOKADA BANA
-        if (isset($user['is_active']) && (int)$user['is_active'] === 0) {
-            $this->render('login', ['error' => 'Twoje konto jest zablokowane.']);
-            return;
-        }
+      if (isset($user['is_active']) && (int)$user['is_active'] === 0) {
+    $this->startSession();
+    $_SESSION['flash_error'] = 'Twoje konto jest zbanowane. Skontaktuj się z administratorem.';
+    $this->redirect('/login');
+}
 
         $this->startSession();
         $_SESSION['user_id'] = (int)$user['id'];
@@ -85,4 +86,18 @@ class SecurityController extends AppController
         session_destroy();
         $this->redirect('/login');
     }
+    public function root(array $params = []): void
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+
+    if (isset($_SESSION['user_id'])) {
+        header('Location: /dashboard');
+    } else {
+        header('Location: /login');
+    }
+    exit;
+}
+
 }

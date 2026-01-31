@@ -2,33 +2,83 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>ZASIANE - Dodaj Nawyk</title>
-    <link rel="stylesheet" href="/public/styles/main.css">
-    <style>
-        body { background-color: #f5f1e4; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .form-card { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        h2 { color: #1a4d2e; text-align: center; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        .btn-submit { background: #27ae60; color: white; border: none; width: 100%; padding: 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZASIANE – Dodaj Nawyk</title>
+
+    <!-- wspólne + dedykowane style -->
+    <link rel="stylesheet" href="/public/styles/common.css">
+    <link rel="stylesheet" href="/public/styles/add-habit.css">
 </head>
 <body>
-    <div class="form-card">
-        <h2>Posadź nową roślinę</h2>
-        <form action="/addHabit" method="POST">
-            <label>Nazwa nawyku:</label>
-            <input type="text" name="name" placeholder="np. Bieganie" required>
-            
-            <label>Ile dni w tygodniu?</label>
-            <select name="target_days">
-                <option value="1">1 dzień</option>
-                <option value="3">3 dni</option>
-                <option value="7">Codziennie</option>
-            </select>
-            
-            <button type="submit" class="btn-submit">Dodaj do ogrodu</button>
-            <a href="/dashboard" style="display:block; text-align:center; margin-top:15px; color:#666; text-decoration:none;">Anuluj</a>
-        </form>
+
+<nav class="top-nav">
+    <a href="/dashboard" class="logo">
+        <img src="/public/images/logo.png" alt="ZASIANE">
+    </a>
+
+    <div class="user-icons">
+        <a href="/dashboard" title="Profil / Dashboard" style="text-decoration:none;">👤</a>
+        <a href="/logout" title="Wyloguj" style="text-decoration:none;">🚪</a>
     </div>
+</nav>
+
+<div class="main-container">
+    <div class="split-card">
+
+        <!-- LEWA: formularz -->
+        <div class="form-side">
+            <h2 class="page-title">Posadź nową roślinę</h2>
+
+            <form action="/addHabit" method="POST">
+                <label for="name">Nazwa nawyku:</label>
+                <input type="text" id="name" name="name" placeholder="np. Bieganie" required>
+
+                <label for="target_days">Częstotliwość:</label>
+                <select id="target_days" name="target_days">
+                    <option value="1">1 dzień w tygodniu</option>
+                    <option value="3">3 dni w tygodniu</option>
+                    <option value="5">5 dni w tygodniu</option>
+                    <option value="7" selected>Codziennie</option>
+                </select>
+
+                <button type="submit" class="btn-submit">Dodaj do ogrodu</button>
+
+                <a class="btn-cancel" href="/dashboard">Anuluj</a>
+            </form>
+        </div>
+
+        <!-- PRAWA: podgląd -->
+        <div class="preview-side">
+            <div class="preview-icon" id="previewIcon">🌱</div>
+            <div class="preview-title">Podgląd rośliny</div>
+            <div class="preview-sub" id="previewText">Nowy nawyk</div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const nameInput = document.getElementById('name');
+    const freqSelect = document.getElementById('target_days');
+    const previewText = document.getElementById('previewText');
+    const previewIcon = document.getElementById('previewIcon');
+
+    function updatePreview() {
+        const name = nameInput.value.trim();
+        previewText.textContent = name !== '' ? name : 'Nowy nawyk';
+
+        const v = parseInt(freqSelect.value, 10);
+        // prościutki “podgląd” zależny od częstotliwości
+        if (v >= 7) previewIcon.textContent = '🌳';
+        else if (v >= 5) previewIcon.textContent = '🌿';
+        else if (v >= 3) previewIcon.textContent = '🌱';
+        else previewIcon.textContent = '🥀';
+    }
+
+    nameInput.addEventListener('input', updatePreview);
+    freqSelect.addEventListener('change', updatePreview);
+    updatePreview();
+</script>
+
 </body>
 </html>

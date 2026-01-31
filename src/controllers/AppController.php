@@ -36,6 +36,7 @@ class AppController
 
     protected function render(string $template = null, array $variables = []): void
     {
+        $this->startSession();
         $templatePath = 'public/views/' . $template . '.html';
         $templatePath404 = 'public/views/404.html';
         $output = "";
