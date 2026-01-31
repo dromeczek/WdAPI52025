@@ -63,4 +63,24 @@ class HabitController extends AppController {
         // Domyślnie pokazujemy formularz (dla żądania GET)
         return $this->render('add-habit');
     }
+    public function deleteHabit(int $habitId, int $userId): void
+{
+    $conn = $this->database->connect();
+
+    // 1. Najpierw usuwamy logi podlewania (klucze obce), aby baza nie wywaliła błędu
+    $stmtLogs = $conn->prepare('
+        DELETE FROM habit_logs WHERE habit_id = :habitId
+    ');
+    $stmtLogs->execute([':habitId' => $habitId]);
+
+    // 2. Następnie usuwamy sam nawyk, upewniając się, że należy do zalogowanego użytkownika
+    $stmtHabit = $conn->prepare('
+        DELETE FROM habits WHERE id = :habitId AND user_id = :userId
+    ');
+    
+    $stmtHabit->execute([
+        ':habitId' => $habitId,
+        ':userId' => $userId
+    ]);
+}
 }

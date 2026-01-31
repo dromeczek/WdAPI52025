@@ -1,29 +1,31 @@
 <?php
-
 require_once 'AppController.php';
-require_once __DIR__ . '/../../repository/HabitRepository.php';
+require_once __DIR__ .'/../../repository/HabitRepository.php';
 
-class DashboardController extends AppController
-{
-    public function index(): void
-    {
+class DashboardController extends AppController {
+    private $habitRepository;
+
+    public function __construct() {
+        $this->habitRepository = new HabitRepository();
+    }
+
+    public function dashboard() {
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
 
-        if (!isset($_SESSION['user_id'])) {
+        $userId = $_SESSION['user_id'] ?? null;
+        if (!$userId) {
             header('Location: /login');
             exit;
         }
 
-  $habitRepository = new HabitRepository();
-    
-    // NAJPIERW: przelicz więdnięcie
-    $habitRepository->refreshHabitsHealth($_SESSION['user_id']);
-    
-    // POTEM: pobierz świeże dane
-    $habits = $habitRepository->getHabits($_SESSION['user_id']);
+        // KROK 1: Sprawdź czy roślinki nie usychają
+        $this->habitRepository->updateHealthStatus($userId);
 
-    $this->render('dashboard', ['habits' => $habits]);
+        // KROK 2: Pobierz aktualne dane
+        $habits = $this->habitRepository->getHabits($userId);
+        
+        $this->render('dashboard', ['habits' => $habits]);
     }
 }
