@@ -91,4 +91,26 @@ class HabitController extends AppController
         header('Location: /dashboard');
         exit;
     }
+    public function delete(array $params = []): void
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: /login');
+        exit;
+    }
+
+    $habitId = (int)($params['id'] ?? 0);
+    $userId  = (int)$_SESSION['user_id'];
+
+    if ($habitId > 0) {
+        $this->habitRepository->deleteHabit($habitId, $userId);
+    }
+
+    header('Location: /dashboard');
+    exit;
+}
+
 }
