@@ -27,11 +27,28 @@ class AppController
     {
         $this->requireLogin();
 
-        // U Ciebie na dashboardzie admin jest po roleId === 2
+        // U Ciebie admin to role_id === 2
         if (!isset($_SESSION['role_id']) || (int)$_SESSION['role_id'] !== 2) {
             http_response_code(403);
             exit('Brak uprawnień');
         }
+    }
+
+    // ✅ NOWE: wykrywanie fetch/AJAX
+    protected function isAjax(): bool
+    {
+        $xrw = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? '';
+        $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
+        return stripos($xrw, 'fetch') !== false || stripos($accept, 'application/json') !== false;
+    }
+
+    // ✅ NOWE: odpowiedź JSON
+    protected function json(array $data, int $status = 200): void
+    {
+        http_response_code($status);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        exit;
     }
 
     protected function render(string $template = null, array $variables = []): void
@@ -55,19 +72,4 @@ class AppController
 
         echo $output;
     }
-    protected function isAjax(): bool
-{
-    $xrw = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? '';
-    $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
-    return stripos($xrw, 'fetch') !== false || stripos($accept, 'application/json') !== false;
-}
-
-protected function json(array $data, int $status = 200): void
-{
-    http_response_code($status);
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode($data, JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
 }
