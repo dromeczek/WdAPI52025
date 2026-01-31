@@ -30,3 +30,101 @@ body {
 }
 
 .user-icons a { text-decoration: none; color: inherit; }
+/* =========================
+   RESPONSIVE (ONLY MEDIA QUERIES)
+   ========================= */
+
+/* Tablet i mniejsze: ciaśniej, menu się zawija */
+@media screen and (max-width: 768px) {
+  nav {
+    height: auto;
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  nav > ul {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  .container {
+    grid-template-columns: 0.9fr 2.1fr;
+    height: auto; /* pozwala contentowi rosnąć */
+    min-height: calc(100vh - 100px);
+  }
+
+  main {
+    overflow: auto;
+  }
+
+  /* obrazki w listingu kart */
+  main img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+/* Telefony: nav w kolumnie + jedna kolumna contentu + aside na dole */
+@media screen and (max-width: 480px) {
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    padding: 12px 14px;
+  }
+
+  nav > ul {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .container {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: calc(100vh - 120px); /* nav zwykle wyższy na mobile */
+    padding-bottom: 110px; /* miejsce na fixed aside (żeby main nie chował się pod nim) */
+  }
+
+  aside {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    z-index: 20;
+  }
+
+  main {
+    padding: 12px;
+  }
+
+  /* listy kart: ciaśniej na mobile */
+  main ul {
+    padding-left: 18px;
+  }
+
+  main li img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Bardzo małe telefony: jeszcze ciaśniej */
+@media screen and (max-width: 360px) {
+  nav {
+    padding: 10px 12px;
+  }
+
+  .container {
+    padding-bottom: 120px;
+  }
+
+  aside {
+    height: 110px;
+  }
+}

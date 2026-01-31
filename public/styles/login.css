@@ -83,3 +83,72 @@ button:hover {
 .register-btn:hover {
   background-color: #25b963;
 }
+/* =========================
+   RESPONSIVE (ONLY MEDIA QUERIES)
+   ========================= */
+
+/* Tablet i mniejsze */
+@media screen and (max-width: 768px) {
+  .background {
+    padding-top: 180px; /* było 400px */
+    background-attachment: scroll; /* na mobile fixed często szarpie */
+  }
+
+  .frame {
+    width: min(420px, 92vw);
+    padding: 24px;
+  }
+
+  .corner-logo {
+    width: 60px;
+    top: 16px;
+    left: 16px;
+  }
+}
+
+/* Telefony */
+@media screen and (max-width: 480px) {
+  .background {
+    padding-top: 120px;
+  }
+
+  label {
+    font-size: 15px;
+  }
+
+  input {
+    font-size: 16px; /* ważne na iOS: zapobiega auto-zoom przy focus */
+    padding: 12px;
+  }
+
+  button {
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 999px;
+  }
+
+  .frame {
+    width: 92vw;
+    padding: 18px;
+    border-width: 8px;
+  }
+
+  .corner-logo {
+    width: 52px;
+  }
+}
+
+/* Bardzo małe telefony */
+@media screen and (max-width: 360px) {
+  .background {
+    padding-top: 90px;
+  }
+
+  .frame {
+    padding: 14px;
+  }
+
+  label {
+    font-size: 14px;
+  }
+}
