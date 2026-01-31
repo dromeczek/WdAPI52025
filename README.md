@@ -1,23 +1,35 @@
-# ZASIANE 
-Aplikacja webowa do zarządzania nawykami w formie wirtualnego ogrodu
+# ZASIANE 🌱
+Aplikacja webowa do zarządzania nawykami w formie wirtualnego ogrodu.
 
 ## Opis projektu
-ZASIANE to aplikacja webowa umożliwiająca użytkownikom tworzenie i zarządzanie nawykami,
-które wizualizowane są w postaci roślin. Regularne wykonywanie nawyków powoduje „wzrost”
-roślin, natomiast brak aktywności prowadzi do ich obumierania.
-Dodatkowo jest sytem kar w zależności jak często użytkownik wykonuje daną czynności:
-Częstotliwość,Typ Rośliny,Kara za 1 dzień zwłoki,Dni do uschnięcia
-7/7 (Codziennie),Drzewo (Wymagające),15 HP,~7 dni
-3-5/7 (Często),Krzew (Średni),10 HP,10 dni
-1/7 (Rzadko),Kaktus (Odporny),5 HP,20 dni
+**ZASIANE** to aplikacja webowa umożliwiająca użytkownikom tworzenie i zarządzanie nawykami,  
+które są wizualizowane w postaci roślin. Regularne wykonywanie nawyków powoduje „wzrost” roślin,  
+natomiast brak aktywności prowadzi do ich obumierania.
 
-Aplikacja posiada system logowania, role użytkowników oraz panel administracyjny
-umożliwiający zarządzanie kontami.
+Dodatkowo aplikacja posiada **system kar (HP)** zależny od częstotliwości wykonywania nawyku:
+
+| Częstotliwość | Typ rośliny | Kara za 1 dzień zwłoki | Dni do uschnięcia |
+|---|---|---:|---:|
+| 7/7 (Codziennie) | Drzewo (wymagające) | 15 HP | ~7 dni |
+| 3–5/7 (Często) | Krzew (średni) | 10 HP | 10 dni |
+| 1/7 (Rzadko) | Kaktus (odporny) | 5 HP | 20 dni |
+
+Aplikacja posiada system logowania, role użytkowników oraz panel administracyjny umożliwiający zarządzanie kontami.
+
+---
+
+## Funkcje
+- Rejestracja i logowanie użytkowników
+- Tworzenie i zarządzanie nawykami
+- Wizualizacja nawyków jako „roślin” (wzrost / obumieranie)
+- System kar (HP) zależny od częstotliwości nawyku
+- Role użytkowników: **USER** i **ADMIN**
+- Panel administratora do zarządzania kontami (np. blokady / role)
 
 ---
 
 ## Wykorzystane technologie
-- **Backend:** PHP (programowanie obiektowe, architektura MVC)
+- **Backend:** PHP (OOP, architektura MVC)
 - **Frontend:** HTML5, CSS3, JavaScript
 - **AJAX:** Fetch API
 - **Baza danych:** PostgreSQL
@@ -28,10 +40,10 @@ umożliwiający zarządzanie kontami.
 
 ## Architektura aplikacji
 Projekt oparty jest na architekturze **MVC (Model–View–Controller)**:
-- **Model:** Repozytoria (dostęp do bazy danych)
-- **View:** Widoki HTML
-- **Controller:** Kontrolery obsługujące logikę aplikacji
-- **Routing:** Własny mechanizm routingu
+- **Model:** repozytoria (dostęp do bazy danych)
+- **View:** widoki HTML
+- **Controller:** kontrolery obsługujące logikę aplikacji
+- **Routing:** własny mechanizm routingu
 
 Backend został napisany w sposób obiektowy (OOP).
 
@@ -47,8 +59,8 @@ Uprawnienia są egzekwowane po stronie backendu.
 ---
 
 ## Bezpieczeństwo
-- Hasła przechowywane są w postaci zahashowanej (`password_hash`)
-- Zapytania do bazy realizowane są przez **prepared statements**
+- Hasła przechowywane w postaci zahashowanej (`password_hash`)
+- Zapytania do bazy realizowane przez **prepared statements**
 - System sesji użytkownika
 - Blokada dostępu dla zbanowanych użytkowników
 - Autoryzacja dostępu do panelu administratora
@@ -62,8 +74,9 @@ Baza danych została zaprojektowana w PostgreSQL i zawiera m.in.:
 - klucze główne i obce
 - ograniczenia `UNIQUE`
 - mechanizmy `ON DELETE CASCADE`
+- trigger / funkcje wspierające logikę (np. automatyczne czyszczenie danych po banie)
 
 ### Diagram ERD
-Diagram ERD znajduje się w poniżej:
-<img width="1229" height="599" alt="image" src="https://github.com/user-attachments/assets/d7e3a200-1905-4486-9f06-f126a04facad" />
+Diagram ERD znajduje się poniżej:
 
+<img width="1229" height="599" alt="ERD ZASIANE" src="https://github.com/user-attachments/assets/d7e3a200-1905-4486-9f06-f126a04facad" />
