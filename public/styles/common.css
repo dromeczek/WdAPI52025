@@ -1,0 +1,32 @@
+:root {
+    --bg-beige: #f5f1e4;
+    --dark-green: #1a4d2e;
+    --accent-green: #27ae60;
+}
+
+body {
+    background-color: var(--bg-beige);
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+}
+
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+}
+
+.logo img { 
+    height: 80px; 
+    width: auto; 
+    display: block;
+}
+
+.user-icons { 
+    display: flex; 
+    gap: 25px;
+    font-size: 2.5rem;
+}
+
+.user-icons a { text-decoration: none; color: inherit; }
