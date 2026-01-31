@@ -84,3 +84,37 @@ Diagram ERD znajduje się poniżej:
 
 <img width="1092" height="555" alt="image" src="https://github.com/user-attachments/assets/7510b414-db5e-4f79-a731-07127559c6a0" />
 
+---  
+
+SecurityController
+
+Odpowiada za:
+
+logowanie
+
+rejestrację
+
+wylogowanie
+---  
+DashboardController
+
+Odpowiada za:
+
+ekran główny użytkownika
+
+listę nawyków
+
+akcje użytkownika (np. usuwanie, podlanie)
+---  
+AdminController
+listę użytkowników
+
+szczegóły usera
+
+ban / unban
+---  
+AppController
+
+wspólną metodę render()
+
+brak powielania kodu
