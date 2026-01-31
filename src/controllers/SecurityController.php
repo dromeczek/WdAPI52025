@@ -95,6 +95,7 @@ public function handleLogin(): void
     // ZAPISYWANIE DANYCH DO SESJI
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['login']   = $user['login'];
+    $_SESSION['email']   = $user['email'];
 
     // OBSŁUGA ROLI
     if (isset($user['role_id']) && $user['role_id'] == 2) {

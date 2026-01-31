@@ -4,208 +4,88 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ZASIANE – Twój Ogród</title>
-    <link rel="stylesheet" href="/public/styles/main.css" />
-    <style>
-        .garden-container {
-            padding: 2rem;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .garden-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-        .habit-card {
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 20px;
-            padding: 25px;
-            text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            position: relative;
-        }
-        .habit-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-        }
-        .plant-icon {
-            font-size: 5rem;
-            margin: 15px 0;
-            display: block;
-            transition: transform 0.3s ease;
-        }
-        .health-bar-bg {
-            background: #eeeeee;
-            border-radius: 12px;
-            height: 12px;
-            width: 100%;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        .health-bar-fill {
-            height: 100%;
-            border-radius: 12px;
-            transition: width 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
-        }
-        .btn-water {
-            cursor: pointer;
-            display: inline-block;
-            background: #3498db;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 1rem;
-            width: 100%;
-            transition: background 0.3s, transform 0.1s;
-        }
-        .btn-water:hover { background: #2980b9; }
-        .btn-water:active { transform: scale(0.95); }
-
-        .btn-delete {
-            display: block;
-            margin-top: 15px;
-            color: #e74c3c;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-        .btn-delete:hover { text-decoration: underline; }
-
-        .btn-add {
-            background: #27ae60;
-            color: white;
-            padding: 14px 28px;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: bold;
-            transition: opacity 0.3s;
-        }
-        .btn-add:hover { opacity: 0.9; }
-
-        .status-dead { color: #c0392b; font-weight: bold; margin-bottom: 5px; }
-        .reminder-info { font-size: 0.8rem; color: #7f8c8d; margin-top: 10px; }
-
-        @media (max-width: 600px) {
-            nav { flex-direction: column; text-align: center; gap: 10px; }
-        }
-    </style>
+<link rel="stylesheet" href="/public/styles/dashboard.css">
 </head>
 <body>
 
-<nav style="display:flex; justify-content:space-between; align-items:center; padding:1rem; background:#fff; border-bottom: 1px solid #ddd;">
-    <strong style="color: #27ae60; font-size: 1.5rem;">🌱 ZASIANE</strong>
-    <div>
-        <span>Witaj, <strong><?= htmlspecialchars($_SESSION['login'] ?? 'Użytkowniku') ?></strong>!</span>
-
-        <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'ADMIN'): ?>
-            <a href="/admin" style="margin-left: 20px; padding: 5px 10px; background: #f1c40f; color: #000; text-decoration: none; border-radius: 5px; font-weight: bold; border: 1px solid #d4ac0d;">
-                🛡️ PANEL ADMINA
-            </a>
-        <?php endif; ?>
-
-        <a href="/logout" style="margin-left: 20px; color: #e74c3c; text-decoration: none; font-weight: 500;">Wyloguj</a>
+<nav class="top-nav">
+    <a href="/dashboard" class="logo">
+        <img src="/public/images/logo.png" alt="ZASIANE">
+    </a>
+    
+    <div class="user-icons">
+        <a href="/logout" title="Wyloguj">🚪</a>
     </div>
 </nav>
 
-<div class="garden-container">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-        <h1>Twój Habit Garden</h1>
-        <a href="/addHabit" class="btn-add">+ Posadź nową roślinę</a>
-    </div>
+<div class="header-section">
+    <div class="title-box">Mój ogród</div>
+    <a href="/waterAll" class="btn-action" style="text-decoration: none;">💧 Podlej wszystko</a>
+    <a href="/addHabit" class="btn-action">➕ Dodaj nawyk</a>
+</div>
 
-    <div class="garden-grid">
-      <?php if (isset($habits) && !empty($habits)): ?>
+<div class="garden-grid">
+    <?php if (!empty($habits)): ?>
         <?php foreach ($habits as $habit): ?>
-          <?php $hp = (int)$habit['current_health']; ?>
-          <div class="habit-card" id="habit-<?= $habit['id'] ?>">
-            <h3 style="margin-top: 0;"><?= htmlspecialchars($habit['name']) ?></h3>
+            <?php $hp = (int)$habit['current_health']; ?>
             
-            <div class="plant-icon" id="icon-<?= $habit['id'] ?>">
-              <?php 
-                if ($hp > 70) echo '🌳';
-                elseif ($hp > 30) echo '🌱';
-                elseif ($hp > 0) echo '🥀';
-                else echo '💀';
-              ?>
-            </div>
+            <div class="habit-card" onclick="waterPlant(<?= $habit['id'] ?>)">
+                <div class="icon-wrapper" id="icon-container-<?= $habit['id'] ?>">
+                    <?php 
+                        if ($hp > 70) echo '🌳';
+                        elseif ($hp > 30) echo '🌱';
+                        elseif ($hp > 0) echo '🥀';
+                        else echo '💀';
+                    ?>
+                </div>
 
-            <div class="health-bar-bg">
-                <div class="health-bar-fill" 
-                     id="bar-<?= $habit['id'] ?>"
-                     style="width: <?= $hp ?>%; background: <?= $hp > 40 ? '#2ecc71' : '#e74c3c' ?>;">
+                <div class="hp-line-bg">
+                    <div class="hp-line-fill" id="bar-<?= $habit['id'] ?>" 
+                         style="width: <?= $hp ?>%; background: <?= $hp > 30 ? '#4fbf67' : '#e74c3c' ?>;"></div>
+                </div>
+
+                <div class="habit-footer">
+                    <p class="habit-name"><?= htmlspecialchars($habit['name']) ?></p>
+                    <div class="habit-meta">
+                        <span>🕒</span>
+                        <span id="status-text-<?= $habit['id'] ?>">
+                            <?= $hp > 0 ? 'podlane dziś' : 'uschnięte' ?>
+                        </span>
+                        <span style="margin-left: auto;">💧 <span id="water-count-<?= $habit['id'] ?>"><?= $habit['water_count'] ?? 0 ?></span></span>
+                    </div>
                 </div>
             </div>
-            
-            <p>Zdrowie: <strong id="hp-text-<?= $habit['id'] ?>"><?= $hp ?>%</strong></p>
 
-            <div id="actions-<?= $habit['id'] ?>">
-            <?php if ($hp > 0): ?>
-                <button onclick="waterPlant(<?= $habit['id'] ?>)" class="btn-water" id="btn-water-<?= $habit['id'] ?>">Podlej 💧</button>
-                <a href="/deleteHabit/<?= $habit['id'] ?>" 
-                   onclick="return confirm('Czy na pewno chcesz wyrwać tę roślinę?')" 
-                   class="btn-delete">Usuń roślinę</a>
-            <?php else: ?>
-                <p class="status-dead">Roślina uschła...</p>
-                <a href="/deleteHabit/<?= $habit['id'] ?>" class="btn-delete" style="color: #e74c3c; font-weight: bold;">
-                    Wyczyść doniczkę 🗑️
-                </a>
-            <?php endif; ?>
-            </div>
-
-            <?php if(isset($habit['reminder_time'])): ?>
-                <div class="reminder-info">⏰ Przypomnienie: <?= substr($habit['reminder_time'], 0, 5) ?></div>
-            <?php endif; ?>
-          </div>
         <?php endforeach; ?>
-      <?php else: ?>
-        <div style="grid-column: 1 / -1; text-align: center; padding: 4rem; background: #fdfdfd; border: 2px dashed #ddd; border-radius: 20px;">
-            <p style="font-size: 1.4rem; color: #888;">Twój ogród świeci pustkami.</p>
-            <p>Czas wprowadzić trochę zieleni do Twojego życia!</p>
-            <br>
-            <a href="/addHabit" style="color: #27ae60; font-weight: bold; text-decoration: none;">Kliknij tutaj, aby zacząć</a>
-        </div>
-      <?php endif; ?>
-    </div>
+    <?php else: ?>
+        <p style="grid-column: 1/-1; text-align:center; font-size: 1.2rem; color: #666; margin-top: 50px;">
+            Twój ogród jest pusty. Posadź pierwszą roślinę!
+        </p>
+    <?php endif; ?>
 </div>
 
 <script>
     function waterPlant(id) {
-        const button = document.getElementById(`btn-water-${id}`);
-        button.disabled = true;
-        button.innerText = "Podlewanie...";
-
-        fetch(`/water/${id}`, {
-            method: 'GET'
-        })
-        .then(response => {
+        fetch(`/water/${id}`)
+        .then(async response => {
+            const message = await response.text();
             if (response.ok) {
-                const bar = document.getElementById(`bar-${id}`);
-                const hpText = document.getElementById(`hp-text-${id}`);
-                const icon = document.getElementById(`icon-${id}`);
+                document.getElementById(`bar-${id}`).style.width = '100%';
+                document.getElementById(`bar-${id}`).style.background = '#4fbf67';
+                document.getElementById(`icon-container-${id}`).innerText = '🌳';
+                document.getElementById(`status-text-${id}`).innerText = 'podlane dziś';
                 
-                // Aktualizacja UI
-                bar.style.width = '100%';
-                bar.style.background = '#2ecc71';
-                hpText.innerText = '100%';
-                icon.innerText = '🌳';
+                const countElem = document.getElementById(`water-count-${id}`);
+                countElem.innerText = parseInt(countElem.innerText) + 1;
                 
-                button.disabled = false;
-                button.innerText = "Podlej 💧";
+                // Efekt pulsu
+                const icon = document.getElementById(`icon-container-${id}`);
+                icon.style.transform = "scale(1.2)";
+                setTimeout(() => icon.style.transform = "scale(1)", 200);
+
             } else {
-                alert("Wystąpił błąd podczas podlewania.");
-                button.disabled = false;
-                button.innerText = "Podlej 💧";
+                alert(message);
             }
-        })
-        .catch(error => {
-            console.error('Błąd Fetch API:', error);
-            window.location.reload();
         });
     }
 </script>

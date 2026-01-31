@@ -1,7 +1,6 @@
 <?php
-require_once 'AppController.php';
-require_once __DIR__ .'/../../repository/HabitRepository.php';
-
+require_once 'AppController.php'; // Jeśli jest w tym samym folderze
+require_once __DIR__ . '/../../repository/HabitRepository.php'; // Ścieżka do repozytorium
 class DashboardController extends AppController {
     private $habitRepository;
 
@@ -20,12 +19,14 @@ class DashboardController extends AppController {
             exit;
         }
 
-        // KROK 1: Sprawdź czy roślinki nie usychają
+        // 1. Aktualizacja zdrowia (logika więdnięcia)
         $this->habitRepository->updateHealthStatus($userId);
 
-        // KROK 2: Pobierz aktualne dane
+        // 2. Pobranie nawyków wraz z nowymi statystykami (podlania)
         $habits = $this->habitRepository->getHabits($userId);
         
-        $this->render('dashboard', ['habits' => $habits]);
+        $this->render('dashboard', [
+            'habits' => $habits
+        ]);
     }
 }

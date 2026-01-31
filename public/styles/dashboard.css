@@ -1,0 +1,132 @@
+
+        :root {
+            --bg-beige: #f5f1e4;
+            --dark-green: #1a4d2e;
+            --accent-green: #27ae60;
+            --card-white: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-beige);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            color: #333;
+        }
+
+        /* Nawigacja */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 60px; /* Duży padding dla oddechu */
+        }
+
+        /* Powiększone Logo */
+        .logo img { 
+            height: 80px; 
+            width: auto; 
+            display: block;
+        }
+
+        /* Powiększona Ikona Wyjścia */
+        .user-icons { 
+            display: flex; 
+            align-items: center;
+            font-size: 3.5rem; /* Duże drzwi */
+        }
+
+        .user-icons a {
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s;
+        }
+
+        .user-icons a:hover {
+            transform: scale(1.1);
+        }
+
+        /* Nagłówek sekcji */
+        .header-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 40px 0;
+        }
+        .title-box {
+            background-color: var(--dark-green);
+            color: white;
+            padding: 15px 60px;
+            border-radius: 4px;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+        .btn-action {
+            background-color: var(--accent-green);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        /* Siatka kart */
+        .garden-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 40px;
+            padding: 20px;
+        }
+
+        /* Karta nawyku */
+        .habit-card {
+            background: var(--card-white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+        .habit-card:hover { 
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+
+        .icon-wrapper {
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 7rem; /* Bardzo wyraźne emoji */
+            background-color: #fafafa;
+            transition: transform 0.2s;
+        }
+
+        .habit-footer {
+            background-color: var(--dark-green);
+            color: white;
+            padding: 18px;
+            text-align: left;
+        }
+        .habit-name { margin: 0 0 8px 0; font-size: 1.1rem; font-weight: 500; }
+        .habit-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Pasek HP */
+        .hp-line-bg { width: 100%; height: 6px; background: #eee; }
+        .hp-line-fill { height: 100%; transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
