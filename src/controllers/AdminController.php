@@ -1,41 +1,51 @@
 <?php
-require_once 'AppController.php';
-require_once __DIR__ .'/../../repository/HabitRepository.php';
-require_once __DIR__ .'/../../repository/UserRepository.php';
+require_once __DIR__ . '/../../repository/UserRepository.php';
+require_once __DIR__ . '/../../repository/HabitRepository.php';
+require_once __DIR__ . '/AppController.php';
 
-class AdminController extends AppController {
-    private $habitRepository;
-    private $userRepository;
+class AdminController extends AppController
+{
+    private HabitRepository $habitRepository;
+    private UserRepository $userRepository;
 
-    public function __construct() {
-        // Usunięto parent::__construct() - to był powód błędu
+    public function __construct()
+    {
         $this->habitRepository = new HabitRepository();
         $this->userRepository = new UserRepository();
     }
 
-    public function adminPanel() {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-
-        $role = $_SESSION['role'] ?? null;
-        if (!$role || $role !== 'ADMIN') {
-            header('Location: /dashboard');
-            exit;
-        }
+    // GET /admin
+    public function adminPanel(): void
+    {
+        $this->requireAdmin();
 
         $users = $this->userRepository->getUsersWithHabits();
         $this->render('admin-panel', ['users' => $users]);
     }
 
-    public function ban($params) {
-        $this->userRepository->banUser($params['id']);
-        header("Location: /admin");
-        exit();
+    // POST /ban/{id}
+    public function ban(array $params): void
+    {
+        $this->requireAdmin();
+
+        $id = (int)($params['id'] ?? 0);
+        if ($id > 0) {
+            $this->userRepository->banUser($id);
+        }
+
+        $this->redirect('/admin');
     }
-    public function unban($params) {
-    $this->userRepository->unbanUser($params['id']);
-    header("Location: /admin");
-    exit();
-}
+
+    // POST /unban/{id}
+    public function unban(array $params): void
+    {
+        $this->requireAdmin();
+
+        $id = (int)($params['id'] ?? 0);
+        if ($id > 0) {
+            $this->userRepository->unbanUser($id);
+        }
+
+        $this->redirect('/admin');
+    }
 }

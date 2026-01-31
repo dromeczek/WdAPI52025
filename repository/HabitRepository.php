@@ -58,6 +58,31 @@ class HabitRepository extends Repository {
         $stmt->execute([$habitId]);
         return (int)$stmt->fetchColumn();
     }
+public function deleteHabit(int $habitId, int $userId): void
+{
+    $conn = $this->database->connect();
+
+    // bezpieczeństwo: usuwamy TYLKO jeśli nawyk należy do zalogowanego usera
+    $conn->beginTransaction();
+    try {
+        // najpierw logi
+        $stmt = $conn->prepare('
+            DELETE FROM habit_logs
+            WHERE habit_id = :habitId
+              AND habit_id IN (SELECT id FROM habits WHERE id = :habitId AND user_id = :userId)
+        ');
+        $stmt->execute([':habitId' => $habitId, ':userId' => $userId]);
+
+        // potem sam nawyk
+        $stmt = $conn->prepare('DELETE FROM habits WHERE id = :habitId AND user_id = :userId');
+        $stmt->execute([':habitId' => $habitId, ':userId' => $userId]);
+
+        $conn->commit();
+    } catch (Throwable $e) {
+        $conn->rollBack();
+        throw $e;
+    }
+}
 
     public function updateHealthStatus(int $userId): void {
         $stmt = $this->database->connect()->prepare("

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ZASIANE – Twój Ogród</title>
-<link rel="stylesheet" href="/public/styles/dashboard.css">
+    <link rel="stylesheet" href="/public/styles/dashboard.css">
 </head>
 <body>
 
@@ -12,13 +12,13 @@
     <a href="/dashboard" class="logo">
         <img src="/public/images/logo.png" alt="ZASIANE">
     </a>
-    
+
     <div class="user-icons">
-    <?php if (isset($roleId) && (int)$roleId === 2): ?>
-        <a href="/admin" title="Panel Administratora" style="font-size: 2.5rem; text-decoration: none;">⚙️</a>
-    <?php endif; ?>
-    <a href="/logout" title="Wyloguj">🚪</a>
-</div>
+        <?php if (isset($roleId) && (int)$roleId === 2): ?>
+            <a href="/admin" title="Panel Administratora" style="font-size: 2.5rem; text-decoration: none;">⚙️</a>
+        <?php endif; ?>
+        <a href="/logout" title="Wyloguj">🚪</a>
+    </div>
 </nav>
 
 <div class="header-section">
@@ -31,10 +31,10 @@
     <?php if (!empty($habits)): ?>
         <?php foreach ($habits as $habit): ?>
             <?php $hp = (int)$habit['current_health']; ?>
-            
-            <div class="habit-card" onclick="waterPlant(<?= $habit['id'] ?>)">
-                <div class="icon-wrapper" id="icon-container-<?= $habit['id'] ?>">
-                    <?php 
+
+            <div class="habit-card" onclick="waterPlant(<?= (int)$habit['id'] ?>)">
+                <div class="icon-wrapper" id="icon-container-<?= (int)$habit['id'] ?>">
+                    <?php
                         if ($hp > 70) echo '🌳';
                         elseif ($hp > 30) echo '🌱';
                         elseif ($hp > 0) echo '🥀';
@@ -43,18 +43,47 @@
                 </div>
 
                 <div class="hp-line-bg">
-                    <div class="hp-line-fill" id="bar-<?= $habit['id'] ?>" 
-                         style="width: <?= $hp ?>%; background: <?= $hp > 30 ? '#4fbf67' : '#e74c3c' ?>;"></div>
+                    <div class="hp-line-fill"
+                         id="bar-<?= (int)$habit['id'] ?>"
+                         style="width: <?= $hp ?>%; background: <?= $hp > 30 ? '#4fbf67' : '#e74c3c' ?>;">
+                    </div>
                 </div>
 
                 <div class="habit-footer">
                     <p class="habit-name"><?= htmlspecialchars($habit['name']) ?></p>
-                    <div class="habit-meta">
+
+                    <div class="habit-meta" style="display:flex; align-items:center; gap:10px;">
                         <span>🕒</span>
-                        <span id="status-text-<?= $habit['id'] ?>">
+                        <span id="status-text-<?= (int)$habit['id'] ?>">
                             <?= $hp > 0 ? 'podlane dziś' : 'uschnięte' ?>
                         </span>
-                        <span style="margin-left: auto;">💧 <span id="water-count-<?= $habit['id'] ?>"><?= $habit['water_count'] ?? 0 ?></span></span>
+
+                        <span style="margin-left: auto;">
+                            💧 <span id="water-count-<?= (int)$habit['id'] ?>"><?= (int)($habit['water_count'] ?? 0) ?></span>
+                        </span>
+
+                        <!-- 🗑️ USUŃ: klik nie może odpalić waterPlant() -->
+                        <form
+                            action="/habit/delete/<?= (int)$habit['id'] ?>"
+                            method="POST"
+                            onsubmit="event.stopPropagation(); return confirm('Na pewno usunąć ten nawyk?');"
+                            style="margin:0 0 0 10px;"
+                        >
+                            <button
+                                type="submit"
+                                title="Usuń nawyk"
+                                onclick="event.stopPropagation();"
+                                style="
+                                    border:none;
+                                    background:transparent;
+                                    cursor:pointer;
+                                    font-size: 1.2rem;
+                                    line-height: 1;
+                                    padding: 6px 8px;
+                                    border-radius: 8px;
+                                "
+                            >🗑️</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -77,15 +106,13 @@
                 document.getElementById(`bar-${id}`).style.background = '#4fbf67';
                 document.getElementById(`icon-container-${id}`).innerText = '🌳';
                 document.getElementById(`status-text-${id}`).innerText = 'podlane dziś';
-                
+
                 const countElem = document.getElementById(`water-count-${id}`);
                 countElem.innerText = parseInt(countElem.innerText) + 1;
-                
-                // Efekt pulsu
+
                 const icon = document.getElementById(`icon-container-${id}`);
                 icon.style.transform = "scale(1.2)";
                 setTimeout(() => icon.style.transform = "scale(1)", 200);
-
             } else {
                 alert(message);
             }

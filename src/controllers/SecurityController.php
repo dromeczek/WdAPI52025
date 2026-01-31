@@ -1,7 +1,6 @@
 <?php
-
-require_once 'AppController.php';
 require_once __DIR__ . '/../../repository/UserRepository.php';
+require_once __DIR__ . '/AppController.php';
 
 class SecurityController extends AppController
 {
@@ -12,45 +11,78 @@ class SecurityController extends AppController
         $this->userRepository = new UserRepository();
     }
 
-    // TA METODA NAPRAWIA BŁĄD W index.php:23
-    public function showLogin(): void
+    // GET /login
+    public function loginForm(): void
     {
         $this->render('login');
     }
 
-    public function handleLogin(): void
+    // POST /login
+    public function login(): void
     {
-        $login = $_POST['login'] ?? null;
-        $pass  = $_POST['haslo'] ?? null;
+        $login = trim($_POST['login'] ?? '');
+        $password = (string)($_POST['haslo'] ?? '');
 
-        $user = $this->userRepository->findByLogin($login);
-
-        if (!$user || !password_verify($pass, $user['password_hash'])) {
-            $this->render('login', ['messages' => ['Nieprawidłowe dane!']]);
+        if ($login === '' || $password === '') {
+            $this->render('login', ['error' => 'Podaj login i hasło.']);
             return;
         }
 
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
+        $user = $this->userRepository->findByLogin($login);
+
+        if (!$user || !password_verify($password, $user['password_hash'])) {
+            $this->render('login', ['error' => 'Nieprawidłowy login lub hasło.']);
+            return;
         }
 
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['role_id'] = $user['role_id'];
-        
-        // Ustawiamy role dla AdminController
-        $_SESSION['role'] = ((int)$user['role_id'] === 2) ? 'ADMIN' : 'USER';
+        // ✅ BLOKADA BANA
+        if (isset($user['is_active']) && (int)$user['is_active'] === 0) {
+            $this->render('login', ['error' => 'Twoje konto jest zablokowane.']);
+            return;
+        }
 
-        header('Location: /dashboard');
-        exit;
+        $this->startSession();
+        $_SESSION['user_id'] = (int)$user['id'];
+        $_SESSION['login'] = $user['login'];
+        $_SESSION['role_id'] = (int)$user['role_id'];
+
+        $this->redirect('/dashboard');
     }
 
+    // GET /register
+    public function registerForm(): void
+    {
+        $this->render('register');
+    }
+
+    // POST /register
+    public function register(): void
+    {
+        $login = trim($_POST['login'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $password = (string)($_POST['haslo'] ?? '');
+
+        if ($login === '' || $email === '' || $password === '') {
+            $this->render('register', ['error' => 'Uzupełnij wszystkie pola.']);
+            return;
+        }
+
+        if ($this->userRepository->findByLogin($login)) {
+            $this->render('register', ['error' => 'Taki login już istnieje.']);
+            return;
+        }
+
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $this->userRepository->createUser($login, $email, $hash);
+
+        $this->redirect('/login');
+    }
+
+    // GET /logout
     public function logout(): void
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
+        $this->startSession();
         session_destroy();
-        header('Location: /login');
-        exit;
+        $this->redirect('/login');
     }
 }
