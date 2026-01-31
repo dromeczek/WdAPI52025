@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZASIANE – Szczegóły użytkownika</title>
+    <link rel="stylesheet" href="/public/styles/dashboard.css">
+    <link rel="stylesheet" href="/public/styles/admin.css">
+</head>
+<body>
+
+<div class="admin-container">
+    <h1>Szczegóły użytkownika</h1>
+
+    <div style="background: rgba(0,0,0,0.7); padding: 18px; border-radius: 10px; color: white;">
+        <p><strong>ID:</strong> #<?= (int)$userStats['id'] ?></p>
+        <p><strong>Login:</strong> <?= htmlspecialchars($userStats['login']) ?></p>
+        <p><strong>Email:</strong> <?= htmlspecialchars($userStats['email']) ?></p>
+        <p><strong>Rola:</strong> <?= htmlspecialchars($userStats['role_name']) ?></p>
+        <p><strong>Liczba roślin:</strong> <?= (int)$userStats['total_plants'] ?></p>
+    </div>
+
+    <h2 style="color: rgb(26, 179, 51); margin-top: 25px;">Rośliny / nawyki</h2>
+
+    <?php if (!empty($habits)): ?>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nazwa</th>
+                    <th>Zdrowie</th>
+                    <th>Target dni/tydzień</th>
+                    <th>Utworzono</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($habits as $h): ?>
+                <tr>
+                    <td>#<?= (int)$h['id'] ?></td>
+                    <td><?= htmlspecialchars($h['name']) ?></td>
+                    <td><?= (int)$h['current_health'] ?>%</td>
+                    <td><?= (int)($h['target_days_per_week'] ?? 7) ?></td>
+                    <td><?= htmlspecialchars($h['created_at'] ?? '') ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <p style="color:#ddd;">Brak nawyków.</p>
+    <?php endif; ?>
+
+    <p style="margin-top: 20px;">
+        <a href="/admin" style="color: #81c784; text-decoration: none;">← Powrót do panelu admina</a>
+    </p>
+</div>
+
+</body>
+</html>

@@ -37,7 +37,13 @@
                                 <span class="status-badge status-banned">Zbanowany</span>
                             <?php endif; ?>
                         </td>
-                        <td><strong><?= htmlspecialchars($user['login']) ?></strong><br><small><?= htmlspecialchars($user['email']) ?></small></td>
+                        <td>
+  <a href="/admin/user/<?= (int)$user['id'] ?>" style="color:#81c784; text-decoration:none;">
+    <strong><?= htmlspecialchars($user['login']) ?></strong>
+  </a>
+  <br>
+  <small><?= htmlspecialchars($user['email']) ?></small>
+</td>
                         <td class="habit-list">
                             <?= $user['habit_names'] ? htmlspecialchars($user['habit_names']) : 'Brak nawyków' ?>
                         </td>

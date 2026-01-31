@@ -77,4 +77,19 @@ public function unbanUser(int $id)
     ");
     $stmt->execute([':id' => $id]);
 }
+public function getUserPlantStatsFromView(int $userId): ?array
+{
+    $conn = $this->database->connect();
+
+    $stmt = $conn->prepare('
+        SELECT id, login, email, role_name, total_plants
+        FROM v_user_plant_stats
+        WHERE id = :id
+    ');
+    $stmt->execute([':id' => $userId]);
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row ?: null;
+}
+
 }

@@ -48,4 +48,31 @@ class AdminController extends AppController
 
         $this->redirect('/admin');
     }
+    public function userDetails(array $params): void
+{
+    $this->requireAdmin();
+
+    $userId = (int)($params['id'] ?? 0);
+    if ($userId <= 0) {
+        http_response_code(400);
+        exit('Błędne ID użytkownika');
+    }
+
+    // dane z VIEW (to jest Twój cel)
+    $userStats = $this->userRepository->getUserPlantStatsFromView($userId);
+
+    if (!$userStats) {
+        http_response_code(404);
+        exit('Nie znaleziono użytkownika');
+    }
+
+    // opcjonalnie: dołóż listę nawyków usera
+    $habits = $this->habitRepository->getHabits($userId);
+
+    $this->render('admin-user-details', [
+        'userStats' => $userStats,
+        'habits' => $habits
+    ]);
+}
+
 }

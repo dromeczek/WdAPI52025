@@ -33,6 +33,8 @@ class Routing
         ['GET',  '#^admin$#',                 'AdminController',     'adminPanel'],
         ['POST', '#^ban/(?P<id>\d+)$#',       'AdminController',     'ban'],
         ['POST', '#^unban/(?P<id>\d+)$#',     'AdminController',     'unban'],
+        ['GET', '#^admin/user/(?P<id>\d+)$#', 'AdminController', 'userDetails'],
+
     ];
 
     public static function run(string $path): void
