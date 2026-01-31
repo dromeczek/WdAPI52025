@@ -80,4 +80,5 @@ Baza danych została zaprojektowana w PostgreSQL i zawiera m.in.:
 ### Diagram ERD
 Diagram ERD znajduje się poniżej:
 
-<img width="1229" height="599" alt="ERD ZASIANE" src="https://github.com/user-attachments/assets/d7e3a200-1905-4486-9f06-f126a04facad" />
+<img width="1092" height="555" alt="image" src="https://github.com/user-attachments/assets/7510b414-db5e-4f79-a731-07127559c6a0" />
+
