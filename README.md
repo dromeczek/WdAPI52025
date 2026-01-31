@@ -5,6 +5,11 @@ Aplikacja webowa do zarządzania nawykami w formie wirtualnego ogrodu
 ZASIANE to aplikacja webowa umożliwiająca użytkownikom tworzenie i zarządzanie nawykami,
 które wizualizowane są w postaci roślin. Regularne wykonywanie nawyków powoduje „wzrost”
 roślin, natomiast brak aktywności prowadzi do ich obumierania.
+Dodatkowo jest sytem kar w zależności jak często użytkownik wykonuje daną czynności:
+Częstotliwość,Typ Rośliny,Kara za 1 dzień zwłoki,Dni do uschnięcia
+7/7 (Codziennie),Drzewo (Wymagające),15 HP,~7 dni
+3-5/7 (Często),Krzew (Średni),10 HP,10 dni
+1/7 (Rzadko),Kaktus (Odporny),5 HP,20 dni
 
 Aplikacja posiada system logowania, role użytkowników oraz panel administracyjny
 umożliwiający zarządzanie kontami.
