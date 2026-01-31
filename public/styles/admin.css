@@ -1,0 +1,69 @@
+
+        .admin-container {
+            padding: 50px;
+            color: rgb(26, 179, 51);
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+        th {
+            background: #2e7d32;
+            color: white;
+            text-transform: uppercase;
+            font-size: 0.8em;
+        }
+        tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        /* Styl dla zbanowanego wiersza */
+        .banned-row {
+            opacity: 0.6;
+            background: rgba(211, 47, 47, 0.1);
+        }
+        .habit-list {
+            font-style: italic;
+            color: #b0b0b0;
+            max-width: 300px;
+        }
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .ban-btn {
+            background: #d32f2f;
+            color: white;
+        }
+        .ban-btn:hover {
+            background: #b71c1c;
+        }
+        .unban-btn {
+            background: #4caf50;
+            color: white;
+        }
+        .unban-btn:hover {
+            background: #388e3c;
+        }
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.7em;
+        }
+        .status-active { background: #4caf50; }
+        .status-banned { background: #d32f2f; }
+  
